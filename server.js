@@ -32,7 +32,7 @@ const availablePlayersNames = ['Кит', 'Миша', 'Даша', 'Федя', 'Н
 app.use(bodyParser.json());
 
 // Обработчик для выбора имени игрока
-app.post('/authorize', (req, res) => {
+app.post('kit/authorize', (req, res) => {
   const { name } = req.body;
   console.log(name)
   if (!name) {
@@ -59,7 +59,7 @@ app.post('/authorize', (req, res) => {
 });
 
 // Обработчик для получения статуса игроков
-app.get('/players', (req, res) => {
+app.get('kit/players', (req, res) => {
   // Получаем список игроков и их статус (онлайн/офлайн)
   db.all('SELECT name, online FROM players', (err, players) => {
     if (err) {
@@ -72,7 +72,7 @@ app.get('/players', (req, res) => {
 
 
 // Обработчик для выбора карты
-app.post('/chooseCard', (req, res) => {
+app.post('kit/chooseCard', (req, res) => {
   const { playerCode, chosenCard } = req.body;
   if (!playerCode || !chosenCard) {
     return res.status(400).json({ error: 'Player name and chosen card are required' });
@@ -94,7 +94,7 @@ app.post('/chooseCard', (req, res) => {
 
 });
 
-app.get('/cards', (req, res) => {
+app.get('kit/cards', (req, res) => {
   // Получаем список карт
   db.all('SELECT * FROM cards WHERE chosen = 0', (err, cards) => {
     if (err) {
@@ -104,7 +104,7 @@ app.get('/cards', (req, res) => {
   });
 });
 
-app.post('/chooseCard', (req, res) => {
+app.post('kit/chooseCard', (req, res) => {
   const {playerCode, cardCode} = req.body;
 
   if(!playerCode || !cardCode) {
@@ -124,7 +124,7 @@ app.post('/chooseCard', (req, res) => {
   })
 })
 
-app.post('/myCard ', (req, res) => {
+app.post('kit/myCard ', (req, res) => {
   const {playerCode} = req.body;
   db.get('SELECT * FROM cards WHERE (chosen = 1, chosenBy = ?)', [playerCode], (err, card) => {
     if(err) {
@@ -134,7 +134,7 @@ app.post('/myCard ', (req, res) => {
   })
 })
 
-app.post('/insertPlayer', (req, res) => {
+app.post('kit/insertPlayer', (req, res) => {
   const { name, online } = req.body;
   if (!name || online === undefined) {
     return res.status(400).json({ error: 'Name and online status are required' });
